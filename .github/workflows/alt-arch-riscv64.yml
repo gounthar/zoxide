@@ -14,13 +14,17 @@ jobs:
     name: Build zoxide (riscv64)
     runs-on: ubuntu-24.04-riscv
     continue-on-error: true
+    env:
+      RUSTUP_HOME: /home/runner/.rustup
+      CARGO_HOME: /home/runner/.cargo
     steps:
       - uses: actions/checkout@v6
 
-      - name: Install Rust
+      - name: Setup Rust
         run: |
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-          echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+          export PATH="$CARGO_HOME/bin:$PATH"
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable
+          echo "$CARGO_HOME/bin" >> "$GITHUB_PATH"
 
       - name: Build
         run: |
